@@ -2,6 +2,7 @@ import express from 'express';
 import { Request, Response } from 'express';
 import axios from 'axios';
 import checkAuthenticated from '../middlewares/checkAuthentication';
+import global from '../types';
 
 const router = express.Router();
 
@@ -38,9 +39,9 @@ router.get('/booking-history', checkAuthenticated, async (req: Request, res: Res
 });
 
 router.post('/cancel-book', checkAuthenticated, async (req: Request, res: Response) => {
-    
+
   try {
-    const response = await axios.post(global.QUEUE_API + "/cancel-book", { bookingId: req.body.bookingId });
+    const response = await axios.post(global.QUEUE_API + "/cancel-book", { bookingId: req.body.bookingId }, { headers: { 'x-api-key': req.headers['x-api-key']}});
     res.send(response.data);
   } catch (e) {
     res.send({
